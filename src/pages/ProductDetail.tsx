@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchProduct } from "@/services/api";
 import { Product } from "@/types/product";
-import { Button } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"; // Fixed import from button.tsx instead of card.tsx
 import { ShoppingCart, Star, ArrowLeft } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 
