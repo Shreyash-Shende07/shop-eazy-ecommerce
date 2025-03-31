@@ -20,7 +20,7 @@ const Index = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold mb-2">Free Shipping</h3>
-            <p className="text-gray-600">Enjoy free standard shipping on all orders over $50.</p>
+            <p className="text-gray-600">Enjoy free standard shipping on all orders over ₹500.</p>
           </div>
           
           <div className="p-6 rounded-lg bg-gray-50">
@@ -30,7 +30,7 @@ const Index = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold mb-2">Easy Returns</h3>
-            <p className="text-gray-600">No questions asked returns within 30 days of purchase.</p>
+            <p className="text-gray-600">No questions asked returns within 10 days of purchase.</p>
           </div>
           
           <div className="p-6 rounded-lg bg-gray-50">
