@@ -43,8 +43,8 @@ const App = () => (
             <footer className="bg-gray-900 text-white py-8">
               <div className="container mx-auto px-4">
                 <div className="text-center">
-                  <h3 className="text-xl font-bold mb-2">ShopNow</h3>
-                  <p className="text-gray-400">© 2025 ShopEazy. All rights reserved.</p>
+                  <h3 className="text-xl font-bold mb-2">ShopEazy</h3>
+                  <p className="text-gray-400">© 2025 ShopEazy. All rights reserved.<br>made with love by DJ Anna, SadmaAshiq, Raj Thakare Saheb**</p>
                 </div>
               </div>
             </footer>
