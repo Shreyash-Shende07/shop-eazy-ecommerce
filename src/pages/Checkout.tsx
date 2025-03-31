@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CreditCard, CheckCircle } from "lucide-react";
+import { ArrowLeft, CreditCard, CheckCircle, Cash } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // Form validation schema
 const formSchema = z.object({
@@ -28,9 +29,16 @@ const formSchema = z.object({
   city: z.string().min(2, { message: "City is required" }),
   state: z.string().min(2, { message: "State is required" }),
   pincode: z.string().min(6, { message: "Valid pincode is required" }),
-  cardNumber: z.string().min(16, { message: "Valid card number is required" }),
-  cardExpiry: z.string().min(5, { message: "Valid expiry date is required (MM/YY)" }),
-  cardCvv: z.string().min(3, { message: "Valid CVV is required" }),
+  paymentMethod: z.enum(["card", "cod"], {
+    required_error: "Please select a payment method",
+  }),
+  // Card details are conditionally required based on payment method
+  cardNumber: z.string().optional()
+    .refine(val => !val || val.length >= 16, { message: "Valid card number is required" }),
+  cardExpiry: z.string().optional()
+    .refine(val => !val || val.length >= 5, { message: "Valid expiry date is required (MM/YY)" }),
+  cardCvv: z.string().optional()
+    .refine(val => !val || val.length >= 3, { message: "Valid CVV is required" }),
 });
 
 type CheckoutFormValues = z.infer<typeof formSchema>;
@@ -52,11 +60,15 @@ const Checkout = () => {
       city: "",
       state: "",
       pincode: "",
+      paymentMethod: "card",
       cardNumber: "",
       cardExpiry: "",
       cardCvv: "",
     },
   });
+
+  // Get current payment method to conditionally render card fields
+  const paymentMethod = form.watch("paymentMethod");
 
   // Handle checkout submission
   const onSubmit = (data: CheckoutFormValues) => {
@@ -66,7 +78,7 @@ const Checkout = () => {
     
     // Show success message and clear cart
     toast.success("Order placed successfully!", {
-      description: "Thank you for your purchase!",
+      description: `Thank you for your purchase! ${data.paymentMethod === "cod" ? "We'll collect payment on delivery." : ""}`,
     });
     
     clearCart();
@@ -191,57 +203,101 @@ const Checkout = () => {
               </div>
               
               <div className="bg-white rounded-lg shadow-sm p-6 border">
-                <h2 className="text-xl font-semibold mb-4">Payment Information</h2>
-                <div className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="cardNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Card Number</FormLabel>
-                        <FormControl>
-                          <Input placeholder="4242 4242 4242 4242" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <div className="grid grid-cols-2 gap-4">
+                <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
+                
+                <FormField
+                  control={form.control}
+                  name="paymentMethod"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col space-y-1"
+                        >
+                          <div className="flex items-center space-x-2 rounded-md border p-4">
+                            <RadioGroupItem value="card" id="card" />
+                            <Label htmlFor="card" className="flex items-center gap-2 font-normal">
+                              <CreditCard className="h-5 w-5" />
+                              Credit / Debit Card
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2 rounded-md border p-4">
+                            <RadioGroupItem value="cod" id="cod" />
+                            <Label htmlFor="cod" className="flex items-center gap-2 font-normal">
+                              <Cash className="h-5 w-5" />
+                              Cash on Delivery
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {paymentMethod === "card" && (
+                  <div className="space-y-4 mt-4">
                     <FormField
                       control={form.control}
-                      name="cardExpiry"
+                      name="cardNumber"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Expiry Date</FormLabel>
+                          <FormLabel>Card Number</FormLabel>
                           <FormControl>
-                            <Input placeholder="MM/YY" {...field} />
+                            <Input placeholder="4242 4242 4242 4242" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                     
-                    <FormField
-                      control={form.control}
-                      name="cardCvv"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>CVV</FormLabel>
-                          <FormControl>
-                            <Input placeholder="123" type="password" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="cardExpiry"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Expiry Date</FormLabel>
+                            <FormControl>
+                              <Input placeholder="MM/YY" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="cardCvv"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>CVV</FormLabel>
+                            <FormControl>
+                              <Input placeholder="123" type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               
               <Button type="submit" className="w-full" size="lg">
-                <CreditCard className="mr-2 h-5 w-5" />
-                Place Order
+                {paymentMethod === "card" ? (
+                  <>
+                    <CreditCard className="mr-2 h-5 w-5" />
+                    Pay ₹{(inrSubtotal + (inrSubtotal * 0.05)).toFixed(2)}
+                  </>
+                ) : (
+                  <>
+                    <Cash className="mr-2 h-5 w-5" />
+                    Place Order (Pay ₹{(inrSubtotal + (inrSubtotal * 0.05)).toFixed(2)} on delivery)
+                  </>
+                )}
               </Button>
             </form>
           </Form>
