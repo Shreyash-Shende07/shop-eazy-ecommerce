@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useCart } from "@/contexts/CartContext";
 import { useForm } from "react-hook-form";
@@ -40,17 +39,19 @@ const formSchema = z.object({
     .refine(val => !val || val.length >= 5, { message: "Valid expiry date is required (MM/YY)" }),
   cardCvv: z.string().optional()
     .refine(val => !val || val.length >= 3, { message: "Valid CVV is required" }),
-  // UPI ID for UPI payments
+  // UPI ID for UPI payments - fixed the refine method
   upiId: z.string().optional()
-    .refine(
-      (val, ctx) => {
-        if (ctx.path[0] === "upiId" && ctx.data.paymentMethod === "upi") {
-          return val && val.includes("@") && val.length >= 5;
+    .superRefine((val, ctx) => {
+      // Only validate when payment method is UPI
+      if (ctx.path[0] === "upiId" && ctx.data.paymentMethod === "upi") {
+        if (!val || !val.includes("@") || val.length < 5) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Valid UPI ID is required (e.g., name@upi)",
+          });
         }
-        return true;
-      },
-      { message: "Valid UPI ID is required (e.g., name@upi)" }
-    ),
+      }
+    }),
 });
 
 type CheckoutFormValues = z.infer<typeof formSchema>;
