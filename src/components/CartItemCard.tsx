@@ -13,6 +13,9 @@ interface CartItemCardProps {
 const CartItemCard = ({ item }: CartItemCardProps) => {
   const { updateQuantity, removeFromCart } = useCart();
 
+  // Calculate increased price (USD to INR conversion)
+  const inrPrice = item.price * 83;
+
   return (
     <Card className="mb-4">
       <CardContent className="p-4">
@@ -28,7 +31,7 @@ const CartItemCard = ({ item }: CartItemCardProps) => {
             <Link to={`/product/${item.id}`} className="font-medium hover:text-primary transition-colors line-clamp-1">
               {item.title}
             </Link>
-            <p className="text-sm text-gray-500 mb-2">${item.price.toFixed(2)}</p>
+            <p className="text-sm text-gray-500 mb-2">₹{inrPrice.toFixed(2)}</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Button 
@@ -50,7 +53,7 @@ const CartItemCard = ({ item }: CartItemCardProps) => {
                 </Button>
               </div>
               <div className="flex items-center">
-                <span className="font-medium mr-4">${(item.price * item.quantity).toFixed(2)}</span>
+                <span className="font-medium mr-4">₹{(inrPrice * item.quantity).toFixed(2)}</span>
                 <Button 
                   variant="ghost" 
                   size="icon" 

@@ -13,6 +13,9 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
   
+  // Calculate increased price (USD to INR conversion)
+  const inrPrice = product.price * 83;
+  
   return (
     <Card className="overflow-hidden flex flex-col h-full transition-all duration-200 hover:shadow-lg animate-fade-in">
       <Link to={`/product/${product.id}`} className="flex-grow">
@@ -32,7 +35,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <span className="text-xs">{product.rating.rate}</span>
             <span className="text-xs text-gray-500">({product.rating.count} reviews)</span>
           </div>
-          <p className="font-semibold">${product.price.toFixed(2)}</p>
+          <p className="font-semibold">₹{inrPrice.toFixed(2)}</p>
         </CardContent>
       </Link>
       <CardFooter className="p-4 pt-0 mt-auto">

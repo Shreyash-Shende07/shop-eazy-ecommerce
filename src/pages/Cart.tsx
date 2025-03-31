@@ -8,6 +8,9 @@ import { Link } from "react-router-dom";
 
 const Cart = () => {
   const { cart, clearCart, subtotal } = useCart();
+  
+  // Calculate increased subtotal (USD to INR conversion)
+  const inrSubtotal = subtotal * 83;
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -42,7 +45,7 @@ const Cart = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>₹{inrSubtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
@@ -50,7 +53,7 @@ const Cart = () => {
                   </div>
                   <div className="pt-3 border-t flex justify-between font-semibold">
                     <span>Total</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>₹{inrSubtotal.toFixed(2)}</span>
                   </div>
                 </div>
               </CardContent>

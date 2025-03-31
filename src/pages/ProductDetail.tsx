@@ -51,6 +51,9 @@ const ProductDetail = () => {
     );
   }
 
+  // Calculate increased price (USD to INR conversion)
+  const inrPrice = product.price * 83;
+
   return (
     <div className="container mx-auto px-4 py-12">
       <Link to="/products" className="inline-flex items-center text-gray-600 hover:text-primary mb-6">
@@ -76,7 +79,7 @@ const ProductDetail = () => {
             <span className="text-gray-500">({product.rating.count} reviews)</span>
           </div>
           
-          <div className="text-2xl font-bold mb-6">${product.price.toFixed(2)}</div>
+          <div className="text-2xl font-bold mb-6">₹{inrPrice.toFixed(2)}</div>
           
           <p className="text-gray-600 mb-8">{product.description}</p>
           
