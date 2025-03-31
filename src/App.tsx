@@ -12,6 +12,7 @@ import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Categories from "./pages/Categories";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 
 // Components
@@ -35,6 +36,7 @@ const App = () => (
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

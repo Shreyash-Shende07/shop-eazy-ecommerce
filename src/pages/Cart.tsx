@@ -58,8 +58,10 @@ const Cart = () => {
                 </div>
               </CardContent>
               <CardFooter className="p-6 pt-0 flex flex-col space-y-3">
-                <Button className="w-full">
-                  Checkout <ArrowRight className="ml-2 h-4 w-4" />
+                <Button className="w-full" asChild>
+                  <Link to="/checkout">
+                    Proceed to Checkout <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
                 <Button 
                   variant="outline" 
