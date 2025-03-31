@@ -18,8 +18,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CreditCard, CheckCircle, Cash } from "lucide-react";
+import { ArrowLeft, CreditCard, CheckCircle, Banknote } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 // Form validation schema
 const formSchema = z.object({
@@ -226,7 +227,7 @@ const Checkout = () => {
                           <div className="flex items-center space-x-2 rounded-md border p-4">
                             <RadioGroupItem value="cod" id="cod" />
                             <Label htmlFor="cod" className="flex items-center gap-2 font-normal">
-                              <Cash className="h-5 w-5" />
+                              <Banknote className="h-5 w-5" />
                               Cash on Delivery
                             </Label>
                           </div>
@@ -294,7 +295,7 @@ const Checkout = () => {
                   </>
                 ) : (
                   <>
-                    <Cash className="mr-2 h-5 w-5" />
+                    <Banknote className="mr-2 h-5 w-5" />
                     Place Order (Pay ₹{(inrSubtotal + (inrSubtotal * 0.05)).toFixed(2)} on delivery)
                   </>
                 )}
