@@ -44,7 +44,7 @@ const App = () => (
               <div className="container mx-auto px-4">
                 <div className="text-center">
                   <h3 className="text-xl font-bold mb-2">ShopNow</h3>
-                  <p className="text-gray-400">© 2023 ShopNow. All rights reserved.</p>
+                  <p className="text-gray-400">© 2025 ShopEazy. All rights reserved.</p>
                 </div>
               </div>
             </footer>

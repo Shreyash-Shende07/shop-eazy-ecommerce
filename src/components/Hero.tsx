@@ -9,7 +9,7 @@ const Hero = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="max-w-xl">
             <h1 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
-              Find Your Perfect Style, <span className="text-primary">Shop With Ease</span>
+              Find Your Perfect Style, <span className="text-primary">With ShopEazy</span>
             </h1>
             <p className="text-lg text-gray-600 mb-8">
               Discover the latest trends and products from our curated collection. Quality meets affordability with our extensive range.
