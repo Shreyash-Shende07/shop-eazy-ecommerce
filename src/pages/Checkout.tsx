@@ -39,11 +39,11 @@ const formSchema = z.object({
     .refine(val => !val || val.length >= 5, { message: "Valid expiry date is required (MM/YY)" }),
   cardCvv: z.string().optional()
     .refine(val => !val || val.length >= 3, { message: "Valid CVV is required" }),
-  // UPI ID for UPI payments - fixed the refine method
+  // UPI ID for UPI payments - fixed the superRefine method
   upiId: z.string().optional()
     .superRefine((val, ctx) => {
       // Only validate when payment method is UPI
-      if (ctx.path[0] === "upiId" && ctx.data.paymentMethod === "upi") {
+      if (ctx.path[0] === "upiId" && ctx.parent.paymentMethod === "upi") {
         if (!val || !val.includes("@") || val.length < 5) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
