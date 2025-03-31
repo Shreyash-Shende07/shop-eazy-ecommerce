@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CreditCard, CheckCircle, Banknote } from "lucide-react";
+import { ArrowLeft, CreditCard, CheckCircle, Banknote, Smartphone } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
@@ -30,7 +30,7 @@ const formSchema = z.object({
   city: z.string().min(2, { message: "City is required" }),
   state: z.string().min(2, { message: "State is required" }),
   pincode: z.string().min(6, { message: "Valid pincode is required" }),
-  paymentMethod: z.enum(["card", "cod"], {
+  paymentMethod: z.enum(["card", "cod", "upi"], {
     required_error: "Please select a payment method",
   }),
   // Card details are conditionally required based on payment method
@@ -40,6 +40,17 @@ const formSchema = z.object({
     .refine(val => !val || val.length >= 5, { message: "Valid expiry date is required (MM/YY)" }),
   cardCvv: z.string().optional()
     .refine(val => !val || val.length >= 3, { message: "Valid CVV is required" }),
+  // UPI ID for UPI payments
+  upiId: z.string().optional()
+    .refine(
+      (val, ctx) => {
+        if (ctx.path[0] === "upiId" && ctx.data.paymentMethod === "upi") {
+          return val && val.includes("@") && val.length >= 5;
+        }
+        return true;
+      },
+      { message: "Valid UPI ID is required (e.g., name@upi)" }
+    ),
 });
 
 type CheckoutFormValues = z.infer<typeof formSchema>;
@@ -65,10 +76,11 @@ const Checkout = () => {
       cardNumber: "",
       cardExpiry: "",
       cardCvv: "",
+      upiId: "",
     },
   });
 
-  // Get current payment method to conditionally render card fields
+  // Get current payment method to conditionally render fields
   const paymentMethod = form.watch("paymentMethod");
 
   // Handle checkout submission
@@ -77,9 +89,18 @@ const Checkout = () => {
     console.log("Order data:", data);
     console.log("Cart items:", cart);
     
+    let successMessage = "Order placed successfully!";
+    let description = "Thank you for your purchase!";
+    
+    if (data.paymentMethod === "cod") {
+      description += " We'll collect payment on delivery.";
+    } else if (data.paymentMethod === "upi") {
+      description += " We've sent payment instructions to your email.";
+    }
+    
     // Show success message and clear cart
-    toast.success("Order placed successfully!", {
-      description: `Thank you for your purchase! ${data.paymentMethod === "cod" ? "We'll collect payment on delivery." : ""}`,
+    toast.success(successMessage, {
+      description: description,
     });
     
     clearCart();
@@ -225,6 +246,13 @@ const Checkout = () => {
                             </Label>
                           </div>
                           <div className="flex items-center space-x-2 rounded-md border p-4">
+                            <RadioGroupItem value="upi" id="upi" />
+                            <Label htmlFor="upi" className="flex items-center gap-2 font-normal">
+                              <Smartphone className="h-5 w-5" />
+                              UPI Payment
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2 rounded-md border p-4">
                             <RadioGroupItem value="cod" id="cod" />
                             <Label htmlFor="cod" className="flex items-center gap-2 font-normal">
                               <Banknote className="h-5 w-5" />
@@ -285,6 +313,24 @@ const Checkout = () => {
                     </div>
                   </div>
                 )}
+
+                {paymentMethod === "upi" && (
+                  <div className="space-y-4 mt-4">
+                    <FormField
+                      control={form.control}
+                      name="upiId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>UPI ID</FormLabel>
+                          <FormControl>
+                            <Input placeholder="yourname@upi" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
               </div>
               
               <Button type="submit" className="w-full" size="lg">
@@ -292,6 +338,11 @@ const Checkout = () => {
                   <>
                     <CreditCard className="mr-2 h-5 w-5" />
                     Pay ₹{(inrSubtotal + (inrSubtotal * 0.05)).toFixed(2)}
+                  </>
+                ) : paymentMethod === "upi" ? (
+                  <>
+                    <Smartphone className="mr-2 h-5 w-5" />
+                    Pay ₹{(inrSubtotal + (inrSubtotal * 0.05)).toFixed(2)} via UPI
                   </>
                 ) : (
                   <>
