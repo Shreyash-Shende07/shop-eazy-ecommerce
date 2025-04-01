@@ -20,8 +20,15 @@ const FeaturedProducts = () => {
       try {
         setIsLoading(true);
         const data = await fetchProducts();
-        // Sort products by rating to show best products first
-        const sortedProducts = data.sort((a, b) => b.rating.rate - a.rating.rate);
+        // Sort products by rating to show best products first, then by recency (newer IDs)
+        const sortedProducts = data.sort((a, b) => {
+          // First sort by rating
+          const ratingDiff = b.rating.rate - a.rating.rate;
+          if (ratingDiff !== 0) return ratingDiff;
+          
+          // If rating is the same, sort by ID (assuming higher ID = newer product)
+          return b.id - a.id;
+        });
         setProducts(sortedProducts);
         setIsLoading(false);
       } catch (err) {

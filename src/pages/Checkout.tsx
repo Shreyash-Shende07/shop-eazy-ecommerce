@@ -10,7 +10,15 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
-import { Check } from "lucide-react";
+import { Check, Tag, X } from "lucide-react";
+
+// Available coupon codes with their discount percentages
+const VALID_COUPONS: Record<string, number> = {
+  "WELCOME10": 10,
+  "SAVE20": 20,
+  "MONSOON25": 25,
+  "FLASH50": 50
+};
 
 // Schema for form validation
 const CheckoutSchema = z.object({
@@ -65,9 +73,16 @@ const Checkout = () => {
   const { cart, subtotal, clearCart } = useCart();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [discountPercent, setDiscountPercent] = useState(0);
   
   // Calculate increased subtotal (USD to INR conversion)
   const inrSubtotal = subtotal * 83;
+  
+  // Calculate discount amount based on applied coupon
+  const discountAmount = (inrSubtotal * discountPercent) / 100;
+  const finalAmount = inrSubtotal - discountAmount;
 
   const form = useForm<z.infer<typeof CheckoutSchema>>({
     resolver: zodResolver(CheckoutSchema),
@@ -87,6 +102,30 @@ const Checkout = () => {
   });
   
   const paymentMethod = form.watch("paymentMethod");
+  
+  const handleApplyCoupon = () => {
+    const trimmedCode = couponCode.trim().toUpperCase();
+    
+    if (!trimmedCode) {
+      toast.error("Please enter a coupon code");
+      return;
+    }
+    
+    if (VALID_COUPONS[trimmedCode]) {
+      setAppliedCoupon(trimmedCode);
+      setDiscountPercent(VALID_COUPONS[trimmedCode]);
+      toast.success(`Coupon ${trimmedCode} applied successfully! ${VALID_COUPONS[trimmedCode]}% off`);
+      setCouponCode("");
+    } else {
+      toast.error("Invalid coupon code. Please try again.");
+    }
+  };
+  
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setDiscountPercent(0);
+    toast.success("Coupon removed successfully");
+  };
   
   const onSubmit = (data: z.infer<typeof CheckoutSchema>) => {
     console.log("Form data:", data);
@@ -338,7 +377,7 @@ const Checkout = () => {
                 size="lg"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Processing..." : `Place Order - ₹${inrSubtotal.toFixed(2)}`}
+                {isSubmitting ? "Processing..." : `Place Order - ₹${finalAmount.toFixed(2)}`}
               </Button>
             </form>
           </Form>
@@ -347,6 +386,54 @@ const Checkout = () => {
         <div className="lg:col-span-1">
           <div className="bg-white p-6 rounded-lg shadow-sm border sticky top-24">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+            
+            {/* Coupon code section */}
+            <div className="mb-6 border-b pb-6">
+              <h3 className="font-medium text-sm mb-2 flex items-center gap-1">
+                <Tag className="h-4 w-4" />
+                Apply Coupon
+              </h3>
+              
+              {appliedCoupon ? (
+                <div className="flex items-center justify-between bg-primary/10 p-2 rounded mt-2">
+                  <div className="flex items-center gap-2">
+                    <Tag className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium">
+                      {appliedCoupon} ({discountPercent}% off)
+                    </span>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleRemoveCoupon}
+                    className="h-6 w-6 p-0"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex gap-2 mt-2">
+                  <Input
+                    placeholder="Enter coupon code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    className="h-9"
+                  />
+                  <Button 
+                    onClick={handleApplyCoupon} 
+                    variant="outline" 
+                    size="sm"
+                    className="whitespace-nowrap"
+                  >
+                    Apply
+                  </Button>
+                </div>
+              )}
+              <div className="text-xs text-gray-500 mt-2">
+                Try these coupons: WELCOME10, SAVE20, MONSOON25, FLASH50
+              </div>
+            </div>
+            
             <div className="space-y-4">
               {cart.map((item) => (
                 <div key={item.id} className="flex items-center space-x-4 py-2 border-b">
@@ -370,13 +457,19 @@ const Checkout = () => {
                   <span className="text-gray-600">Subtotal</span>
                   <span>₹{inrSubtotal.toFixed(2)}</span>
                 </div>
+                {discountPercent > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount ({discountPercent}%)</span>
+                    <span>-₹{discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
                   <span>Free</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t font-semibold">
                   <span>Total</span>
-                  <span>₹{inrSubtotal.toFixed(2)}</span>
+                  <span>₹{finalAmount.toFixed(2)}</span>
                 </div>
               </div>
             </div>
