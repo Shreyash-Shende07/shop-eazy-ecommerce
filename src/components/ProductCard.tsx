@@ -46,15 +46,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
     setImageError(true);
   };
   
+  // Default fallback image that's guaranteed to work
+  const fallbackImage = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600";
+  
   return (
     <Card className="overflow-hidden flex flex-col h-full transition-all duration-200 hover:shadow-lg animate-fade-in">
       <Link to={`/product/${product.id}`} className="flex-grow">
         <div className="aspect-square overflow-hidden bg-gray-100 p-4">
           <img 
-            src={imageError ? "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600" : product.image} 
+            src={imageError ? fallbackImage : product.image} 
             alt={product.title} 
             className="w-full h-full object-contain transition-transform duration-300 hover:scale-105" 
             onError={handleImageError}
+            loading="lazy"
           />
         </div>
         <CardContent className="p-4">

@@ -4,7 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import { fetchProduct } from "@/services/api";
 import { Product } from "@/types/product";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Star, ArrowLeft, Plus, Minus } from "lucide-react";
+import { Star, ArrowLeft, Plus, Minus } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import ProductReviews from "@/components/ProductReviews";
 
@@ -119,7 +119,7 @@ const ProductDetail = () => {
           
           <p className="text-gray-600 mb-8">{product.description}</p>
           
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex items-center gap-4 mb-6">
             <div className="flex items-center">
               <Button
                 onClick={handleDecreaseQuantity}
@@ -145,16 +145,6 @@ const ProductDetail = () => {
               </Button>
             </div>
             
-            <Button
-              onClick={() => addToCart(product)}
-              size="lg"
-              className="flex-1"
-              disabled={quantityInCart > 0}
-            >
-              <ShoppingCart className="h-5 w-5 mr-2" />
-              {quantityInCart === 0 ? "Add to Cart" : "In Cart"}
-            </Button>
-            
             <Link to="/cart">
               <Button
                 variant="outline"
@@ -165,7 +155,7 @@ const ProductDetail = () => {
             </Link>
           </div>
           
-          <div className="mt-12 border-t pt-6">
+          <div className="mt-8 border-t pt-6">
             <h3 className="font-semibold mb-2">Product Details</h3>
             <ul className="space-y-2">
               <li>
