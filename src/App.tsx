@@ -46,7 +46,7 @@ const App = () => (
               <div className="container mx-auto px-4">
                 <div className="text-center">
                   <h3 className="text-xl font-bold mb-2">ShopEazy</h3>
-                  <p className="text-gray-400">© 2025 ShopEazy. All rights reserved. Made with LOVE(a blend of blood, sweat, hard work, and resolve to take down mountains). Crafted by the legends DJ Anna, SadmaAshiq, and Raj Thakare Saheb</p>
+                  <p className="text-gray-400">© 2025 ShopEazy. All rights reserved.</p>
                 </div>
               </div>
             </footer>
