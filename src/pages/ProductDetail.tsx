@@ -13,6 +13,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
   
   // Find the product in cart to get quantity
@@ -57,6 +58,10 @@ const ProductDetail = () => {
     }
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
@@ -89,9 +94,10 @@ const ProductDetail = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div className="bg-gray-50 rounded-lg p-8 flex items-center justify-center">
           <img 
-            src={product.image} 
+            src={imageError ? "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600" : product.image} 
             alt={product.title} 
             className="max-h-[400px] object-contain" 
+            onError={handleImageError}
           />
         </div>
         

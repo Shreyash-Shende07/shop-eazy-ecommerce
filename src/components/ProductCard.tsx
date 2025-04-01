@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Star, Plus, Minus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -12,6 +13,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
+  const [imageError, setImageError] = useState(false);
   
   // Find the product in cart to get quantity
   const cartItem = cart.find(item => item.id === product.id);
@@ -39,15 +41,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
       updateQuantity(product.id, quantityInCart - 1);
     }
   };
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
   
   return (
     <Card className="overflow-hidden flex flex-col h-full transition-all duration-200 hover:shadow-lg animate-fade-in">
       <Link to={`/product/${product.id}`} className="flex-grow">
         <div className="aspect-square overflow-hidden bg-gray-100 p-4">
           <img 
-            src={product.image} 
+            src={imageError ? "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600" : product.image} 
             alt={product.title} 
             className="w-full h-full object-contain transition-transform duration-300 hover:scale-105" 
+            onError={handleImageError}
           />
         </div>
         <CardContent className="p-4">

@@ -1,5 +1,6 @@
 
 import { Product } from '@/types/product';
+import { newProducts } from './additionalProducts';
 
 const API_URL = 'https://fakestoreapi.com';
 
@@ -215,6 +216,9 @@ const additionalProducts: Product[] = [
   }
 ];
 
+// Combine original additionalProducts with our new products
+const allAdditionalProducts = [...additionalProducts, ...newProducts];
+
 // Additional categories beyond what the API provides
 const additionalCategories = [
   "home & kitchen",
@@ -233,18 +237,18 @@ export const fetchProducts = async (): Promise<Product[]> => {
     const apiProducts = await response.json();
     
     // Combine API products with our additional products
-    return [...apiProducts, ...additionalProducts];
+    return [...apiProducts, ...allAdditionalProducts];
   } catch (error) {
     console.error('Error fetching products:', error);
     // If API fails, return just our additional products
-    return additionalProducts;
+    return allAdditionalProducts;
   }
 };
 
 export const fetchProduct = async (id: number): Promise<Product> => {
   try {
     // First check if it's one of our additional products
-    const additionalProduct = additionalProducts.find(p => p.id === id);
+    const additionalProduct = allAdditionalProducts.find(p => p.id === id);
     if (additionalProduct) {
       return additionalProduct;
     }
@@ -282,7 +286,7 @@ export const fetchProductsByCategory = async (category: string): Promise<Product
   try {
     // If it's one of our additional categories, filter our additional products
     if (additionalCategories.includes(category)) {
-      return additionalProducts.filter(p => p.category === category);
+      return allAdditionalProducts.filter(p => p.category === category);
     }
     
     // For API categories, try fetching from API first
@@ -293,12 +297,12 @@ export const fetchProductsByCategory = async (category: string): Promise<Product
     const apiProducts = await response.json();
     
     // Also include any of our additional products in this category
-    const additionalCategoryProducts = additionalProducts.filter(p => p.category === category);
+    const additionalCategoryProducts = allAdditionalProducts.filter(p => p.category === category);
     
     return [...apiProducts, ...additionalCategoryProducts];
   } catch (error) {
     console.error(`Error fetching products in category ${category}:`, error);
     // If API fails, return just our additional products for this category
-    return additionalProducts.filter(p => p.category === category);
+    return allAdditionalProducts.filter(p => p.category === category);
   }
 };
