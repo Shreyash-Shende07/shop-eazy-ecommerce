@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 
 // Components
 import Header from "./components/Header";
+import PersistentCartButton from "./components/PersistentCartButton";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <PersistentCartButton />
             </main>
             <footer className="bg-gray-900 text-white py-8">
               <div className="container mx-auto px-4">

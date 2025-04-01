@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { fetchProducts, fetchProductsByCategory } from "@/services/api";
 import { Product } from "@/types/product";
 import ProductCard from "@/components/ProductCard";
@@ -8,12 +9,21 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const Products = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const categoryFromUrl = queryParams.get("category") || "";
+  
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    // Update selected category when URL changes
+    setSelectedCategory(categoryFromUrl);
+  }, [categoryFromUrl]);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -55,6 +65,12 @@ const Products = () => {
   }, [searchQuery, products]);
 
   const handleCategorySelect = (category: string) => {
+    // Update URL with the selected category
+    const url = category 
+      ? `/products?category=${encodeURIComponent(category)}` 
+      : `/products`;
+      
+    window.history.pushState({}, "", url);
     setSelectedCategory(category);
   };
 
@@ -64,7 +80,11 @@ const Products = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">All Products</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        {selectedCategory 
+          ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1).replace('-', ' ')}` 
+          : "All Products"}
+      </h1>
       
       <div className="flex flex-col lg:flex-row gap-8 mb-8">
         <div className="lg:w-1/4">

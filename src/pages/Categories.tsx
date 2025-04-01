@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { fetchCategories } from "@/services/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
@@ -34,14 +34,13 @@ const Categories = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        // Add additional categories for display purposes
-        const extendedCategories = [...data];
-        setCategories(extendedCategories);
+        setCategories(data);
         setIsLoading(false);
       } catch (err) {
         setError("Failed to load categories");
@@ -51,6 +50,11 @@ const Categories = () => {
 
     loadCategories();
   }, []);
+
+  const handleCategoryClick = (category: string) => {
+    // Navigate to products page with the category filter applied
+    navigate(`/products?category=${encodeURIComponent(category)}`);
+  };
 
   if (isLoading) {
     return (
@@ -74,31 +78,33 @@ const Categories = () => {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {categories.map((category) => (
-          <Link to={`/products?category=${category}`} key={category}>
-            <Card className="overflow-hidden hover:shadow-lg transition-all duration-200">
-              <div className="h-48 overflow-hidden">
-                <img 
-                  src={categoryImages[category] || "https://via.placeholder.com/400x300"} 
-                  alt={category} 
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
-                />
-              </div>
-              <CardContent className="p-6">
-                <div className="flex flex-col">
-                  <h3 className="font-semibold capitalize text-lg mb-2">
-                    {category.replace('-', ' ')}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-3">
-                    {categoryDescriptions[category] || "Explore our selection of quality products"}
-                  </p>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="text-sm text-primary">Shop now</span>
-                    <ArrowRight className="h-5 w-5 text-primary" />
-                  </div>
+          <Card 
+            key={category} 
+            className="overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer"
+            onClick={() => handleCategoryClick(category)}
+          >
+            <div className="h-48 overflow-hidden">
+              <img 
+                src={categoryImages[category] || "https://via.placeholder.com/400x300"} 
+                alt={category} 
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
+              />
+            </div>
+            <CardContent className="p-6">
+              <div className="flex flex-col">
+                <h3 className="font-semibold capitalize text-lg mb-2">
+                  {category.replace('-', ' ')}
+                </h3>
+                <p className="text-gray-600 text-sm mb-3">
+                  {categoryDescriptions[category] || "Explore our selection of quality products"}
+                </p>
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-sm text-primary">Shop now</span>
+                  <ArrowRight className="h-5 w-5 text-primary" />
                 </div>
-              </CardContent>
-            </Card>
-          </Link>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

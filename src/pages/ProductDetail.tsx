@@ -3,16 +3,21 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchProduct } from "@/services/api";
 import { Product } from "@/types/product";
-import { Button } from "@/components/ui/button"; // Fixed import from button.tsx instead of card.tsx
-import { ShoppingCart, Star, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, Star, ArrowLeft, Plus, Minus } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import ProductReviews from "@/components/ProductReviews";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { addToCart } = useCart();
+  const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
+  
+  // Find the product in cart to get quantity
+  const cartItem = cart.find(item => item.id === Number(id));
+  const quantityInCart = cartItem ? cartItem.quantity : 0;
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -31,6 +36,26 @@ const ProductDetail = () => {
 
     loadProduct();
   }, [id]);
+
+  const handleIncreaseQuantity = () => {
+    if (product) {
+      if (quantityInCart === 0) {
+        addToCart(product);
+      } else {
+        updateQuantity(product.id, quantityInCart + 1);
+      }
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (product && quantityInCart > 0) {
+      if (quantityInCart === 1) {
+        removeFromCart(product.id);
+      } else {
+        updateQuantity(product.id, quantityInCart - 1);
+      }
+    }
+  };
 
   if (isLoading) {
     return (
@@ -74,8 +99,13 @@ const ProductDetail = () => {
           <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
           
           <div className="flex items-center space-x-1 text-amber-500 mb-4">
-            <Star className="h-5 w-5 fill-current" />
-            <span>{product.rating.rate}</span>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star 
+                key={star}
+                className={`h-5 w-5 ${star <= Math.round(product.rating.rate) ? 'fill-current' : 'text-gray-300'}`}
+              />
+            ))}
+            <span className="ml-1">{product.rating.rate}</span>
             <span className="text-gray-500">({product.rating.count} reviews)</span>
           </div>
           
@@ -84,20 +114,45 @@ const ProductDetail = () => {
           <p className="text-gray-600 mb-8">{product.description}</p>
           
           <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex items-center">
+              <Button
+                onClick={handleDecreaseQuantity}
+                variant="outline"
+                size="icon"
+                className="rounded-r-none"
+                disabled={quantityInCart === 0}
+              >
+                <Minus className="h-4 w-4" />
+              </Button>
+              
+              <div className="px-6 py-2 border-y border-input bg-background text-center min-w-[4rem]">
+                {quantityInCart}
+              </div>
+              
+              <Button
+                onClick={handleIncreaseQuantity}
+                variant="outline"
+                size="icon"
+                className="rounded-l-none"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            
             <Button
               onClick={() => addToCart(product)}
               size="lg"
-              className="w-full sm:w-auto"
+              className="flex-1"
+              disabled={quantityInCart > 0}
             >
               <ShoppingCart className="h-5 w-5 mr-2" />
-              Add to Cart
+              {quantityInCart === 0 ? "Add to Cart" : "In Cart"}
             </Button>
             
             <Link to="/cart">
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto"
               >
                 View Cart
               </Button>
@@ -118,6 +173,9 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+      
+      {/* Product Reviews Section */}
+      <ProductReviews productId={product.id} />
     </div>
   );
 };
