@@ -1,6 +1,5 @@
-
-import { Review } from '@/types/review';
 import { v4 as uuidv4 } from 'uuid';
+import { Review } from '@/types/review';
 
 // Generate a sample set of reviews for each product
 const generateReviewsForProduct = (productId: number): Review[] => {
