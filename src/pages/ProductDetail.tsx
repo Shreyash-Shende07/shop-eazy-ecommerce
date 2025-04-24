@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchProduct } from "@/services/api";
 import { Product } from "@/types/product";
+import CelebrationOverlay from "@/components/CelebrationOverlay";
 import { Button } from "@/components/ui/button";
 import { Star, ArrowLeft, Plus, Minus, ShoppingCart, IndianRupee } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
@@ -15,8 +15,8 @@ const ProductDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
-  
-  // Find the product in cart to get quantity
+  const [showCelebration, setShowCelebration] = useState(false);
+
   const cartItem = cart.find(item => item.id === Number(id));
   const quantityInCart = cartItem ? cartItem.quantity : 0;
 
@@ -37,6 +37,16 @@ const ProductDetail = () => {
 
     loadProduct();
   }, [id]);
+
+  useEffect(() => {
+    if (product?.title === "Promise Ring" && quantityInCart === 3) {
+      setShowCelebration(true);
+      const timer = setTimeout(() => {
+        setShowCelebration(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [quantityInCart, product]);
 
   const handleAddToCart = () => {
     if (product) {
@@ -83,11 +93,11 @@ const ProductDetail = () => {
     );
   }
 
-  // Calculate price in INR (USD to INR conversion)
   const inrPrice = product.price * 83;
 
   return (
     <div className="container mx-auto px-4 py-12">
+      <CelebrationOverlay show={showCelebration} />
       <Link to="/products" className="inline-flex items-center text-gray-600 hover:text-primary mb-6">
         <ArrowLeft className="h-4 w-4 mr-1" />
         Back to products
@@ -183,7 +193,6 @@ const ProductDetail = () => {
         </div>
       </div>
       
-      {/* Product Reviews Section */}
       <ProductReviews productId={product.id} />
     </div>
   );
