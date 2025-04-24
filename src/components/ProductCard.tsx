@@ -1,4 +1,3 @@
-
 import { Product } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -15,15 +14,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
   const [imageError, setImageError] = useState(false);
   
-  // Find the product in cart to get quantity
   const cartItem = cart.find(item => item.id === product.id);
   const quantityInCart = cartItem ? cartItem.quantity : 0;
   
-  // Calculate price in INR
-  const inrPrice = product.price * 83;
+  const inrPrice = Math.ceil(product.price * 83);
   
   const handleIncreaseQuantity = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation to product detail
+    e.preventDefault();
     e.stopPropagation();
     if (quantityInCart === 0) {
       addToCart(product);
@@ -33,7 +30,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   const handleDecreaseQuantity = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation to product detail
+    e.preventDefault();
     e.stopPropagation();
     if (quantityInCart === 1) {
       removeFromCart(product.id);
@@ -46,7 +43,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
     setImageError(true);
   };
   
-  // Default fallback image that's guaranteed to work
   const fallbackImage = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600";
   
   return (
@@ -77,7 +73,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
           <p className="font-semibold flex items-center">
             <IndianRupee className="h-3 w-3 mr-1" />
-            {inrPrice.toFixed(2)}
+            {inrPrice}
           </p>
         </CardContent>
       </Link>

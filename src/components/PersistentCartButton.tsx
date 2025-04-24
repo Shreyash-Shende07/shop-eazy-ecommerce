@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
@@ -10,8 +9,8 @@ const PersistentCartButton = () => {
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(false);
   
-  // Calculate increased subtotal (USD to INR conversion)
-  const inrSubtotal = subtotal * 83;
+  // Calculate increased subtotal (USD to INR conversion) and round up
+  const inrSubtotal = Math.ceil(subtotal * 83);
   
   useEffect(() => {
     // Show button only on home, categories, or products pages and if cart has items
@@ -38,7 +37,7 @@ const PersistentCartButton = () => {
           className="shadow-lg flex items-center gap-2 px-6 py-6 animate-fade-in"
         >
           <ShoppingCart className="h-5 w-5" />
-          <span>View Cart ({totalItems} items) - <IndianRupee className="h-4 w-4 inline" /> {inrSubtotal.toFixed(2)}</span>
+          <span>View Cart ({totalItems} items) - <IndianRupee className="h-4 w-4 inline" /> {inrSubtotal}</span>
         </Button>
       </Link>
     </div>
