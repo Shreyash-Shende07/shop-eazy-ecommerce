@@ -19,9 +19,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const cartItem = cart.find(item => item.id === product.id);
   const quantityInCart = cartItem ? cartItem.quantity : 0;
   
-  // Calculate increased price (USD to INR conversion)
-  const inrPrice = product.price * 83;
-  
   const handleIncreaseQuantity = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation to product detail
     e.stopPropagation();
@@ -75,7 +72,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <span className="text-xs">{product.rating.rate}</span>
             <span className="text-xs text-gray-500">({product.rating.count} reviews)</span>
           </div>
-          <p className="font-semibold">₹{inrPrice.toFixed(2)}</p>
+          <p className="font-semibold">${product.price.toFixed(2)}</p>
         </CardContent>
       </Link>
       <CardFooter className="p-4 pt-0 mt-auto">

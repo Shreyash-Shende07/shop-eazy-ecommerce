@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchProduct } from "@/services/api";
@@ -115,7 +114,7 @@ const ProductDetail = () => {
             <span className="text-gray-500">({product.rating.count} reviews)</span>
           </div>
           
-          <div className="text-2xl font-bold mb-6">₹{inrPrice.toFixed(2)}</div>
+          <div className="text-2xl font-bold mb-6">${product.price.toFixed(2)}</div>
           
           <p className="text-gray-600 mb-8">{product.description}</p>
           
