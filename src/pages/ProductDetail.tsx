@@ -1,9 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchProduct } from "@/services/api";
 import { Product } from "@/types/product";
 import { Button } from "@/components/ui/button";
-import { Star, ArrowLeft, Plus, Minus } from "lucide-react";
+import { Star, ArrowLeft, Plus, Minus, ShoppingCart, IndianRupee } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import ProductReviews from "@/components/ProductReviews";
 
@@ -37,13 +38,15 @@ const ProductDetail = () => {
     loadProduct();
   }, [id]);
 
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product);
+    }
+  };
+
   const handleIncreaseQuantity = () => {
     if (product) {
-      if (quantityInCart === 0) {
-        addToCart(product);
-      } else {
-        updateQuantity(product.id, quantityInCart + 1);
-      }
+      updateQuantity(product.id, quantityInCart + 1);
     }
   };
 
@@ -80,7 +83,7 @@ const ProductDetail = () => {
     );
   }
 
-  // Calculate increased price (USD to INR conversion)
+  // Calculate price in INR (USD to INR conversion)
   const inrPrice = product.price * 83;
 
   return (
@@ -114,44 +117,55 @@ const ProductDetail = () => {
             <span className="text-gray-500">({product.rating.count} reviews)</span>
           </div>
           
-          <div className="text-2xl font-bold mb-6">${product.price.toFixed(2)}</div>
+          <div className="text-2xl font-bold mb-6 flex items-center">
+            <IndianRupee className="h-5 w-5 mr-1" />
+            {inrPrice.toFixed(2)}
+          </div>
           
           <p className="text-gray-600 mb-8">{product.description}</p>
           
           <div className="flex items-center gap-4 mb-6">
-            <div className="flex items-center">
-              <Button
-                onClick={handleDecreaseQuantity}
-                variant="outline"
-                size="icon"
-                className="rounded-r-none"
-                disabled={quantityInCart === 0}
-              >
-                <Minus className="h-4 w-4" />
-              </Button>
-              
-              <div className="px-6 py-2 border-y border-input bg-background text-center min-w-[4rem]">
-                {quantityInCart}
+            {quantityInCart > 0 ? (
+              <div className="flex items-center">
+                <Button
+                  onClick={handleDecreaseQuantity}
+                  variant="outline"
+                  size="icon"
+                  className="rounded-r-none"
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                
+                <div className="px-6 py-2 border-y border-input bg-background text-center min-w-[4rem]">
+                  {quantityInCart}
+                </div>
+                
+                <Button
+                  onClick={handleIncreaseQuantity}
+                  variant="outline"
+                  size="icon"
+                  className="rounded-l-none"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
               </div>
-              
-              <Button
-                onClick={handleIncreaseQuantity}
-                variant="outline"
-                size="icon"
-                className="rounded-l-none"
-              >
-                <Plus className="h-4 w-4" />
+            ) : (
+              <Button onClick={handleAddToCart} className="flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4" />
+                Add to Cart
               </Button>
-            </div>
+            )}
             
-            <Link to="/cart">
-              <Button
-                variant="outline"
-                size="lg"
-              >
-                View Cart
-              </Button>
-            </Link>
+            {quantityInCart > 0 && (
+              <Link to="/cart">
+                <Button
+                  variant="outline"
+                  size="lg"
+                >
+                  View Cart
+                </Button>
+              </Link>
+            )}
           </div>
           
           <div className="mt-8 border-t pt-6">

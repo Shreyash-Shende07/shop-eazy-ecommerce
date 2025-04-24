@@ -3,7 +3,7 @@ import { Product } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Star, Plus, Minus } from "lucide-react";
+import { ShoppingCart, Star, Plus, Minus, IndianRupee } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -18,6 +18,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
   // Find the product in cart to get quantity
   const cartItem = cart.find(item => item.id === product.id);
   const quantityInCart = cartItem ? cartItem.quantity : 0;
+  
+  // Calculate price in INR
+  const inrPrice = product.price * 83;
   
   const handleIncreaseQuantity = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation to product detail
@@ -72,7 +75,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <span className="text-xs">{product.rating.rate}</span>
             <span className="text-xs text-gray-500">({product.rating.count} reviews)</span>
           </div>
-          <p className="font-semibold">${product.price.toFixed(2)}</p>
+          <p className="font-semibold flex items-center">
+            <IndianRupee className="h-3 w-3 mr-1" />
+            {inrPrice.toFixed(2)}
+          </p>
         </CardContent>
       </Link>
       <CardFooter className="p-4 pt-0 mt-auto">

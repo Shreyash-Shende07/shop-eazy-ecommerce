@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, IndianRupee } from "lucide-react";
 
 const PersistentCartButton = () => {
   const { totalItems, subtotal } = useCart();
@@ -38,7 +38,7 @@ const PersistentCartButton = () => {
           className="shadow-lg flex items-center gap-2 px-6 py-6 animate-fade-in"
         >
           <ShoppingCart className="h-5 w-5" />
-          <span>View Cart ({totalItems} items) - ₹{inrSubtotal.toFixed(2)}</span>
+          <span>View Cart ({totalItems} items) - <IndianRupee className="h-4 w-4 inline" /> {inrSubtotal.toFixed(2)}</span>
         </Button>
       </Link>
     </div>
