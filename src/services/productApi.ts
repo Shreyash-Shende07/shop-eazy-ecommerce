@@ -92,14 +92,6 @@ const additionalProducts: Partial<Product>[] = [
     rating: { rate: 4.6, count: 134 }
   },
   {
-    title: "Designer Evening Dress",
-    price: 299.99,
-    description: "Elegant floor-length evening gown with beaded details",
-    category: "women's clothing",
-    image: "https://images.unsplash.com/photo-1572362086098-e0863a225714?auto=format&fit=crop&q=80&w=600",
-    rating: { rate: 4.8, count: 167 }
-  },
-  {
     title: "Smart Developer Workstation",
     price: 1899.99,
     description: "Complete developer setup with ultrawide monitor and accessories",
