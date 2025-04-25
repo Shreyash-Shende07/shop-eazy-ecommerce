@@ -58,7 +58,7 @@ const CelebrationOverlay: React.FC<CelebrationOverlayProps> = ({ show }) => {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", duration: 0.8 }}
         >
-          I LOVE YOU
+          I LOVE SAPTARSHI
         </motion.div>
       </div>
     </div>

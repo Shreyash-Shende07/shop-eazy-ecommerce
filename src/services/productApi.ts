@@ -96,7 +96,7 @@ const additionalProducts: Partial<Product>[] = [
     price: 299.99,
     description: "Elegant floor-length evening gown with beaded details",
     category: "women's clothing",
-    image: "https://images.unsplash.com/photo-1646647238247-03a032b30c87?auto=format&fit=crop&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1572362086098-e0863a225714?auto=format&fit=crop&q=80&w=600",
     rating: { rate: 4.8, count: 167 }
   },
   {
