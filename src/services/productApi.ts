@@ -48,7 +48,7 @@ const additionalProducts: Partial<Product>[] = [
     price: 29.99,
     description: "Men's Quick-Dry Athletic Running Shorts",
     category: "men's clothing",
-    image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1562183241-b937e95585b6?auto=format&fit=crop&q=80&w=600",
     rating: { rate: 4.5, count: 190 }
   },
   {
@@ -58,14 +58,6 @@ const additionalProducts: Partial<Product>[] = [
     category: "women's clothing",
     image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&q=80&w=600",
     rating: { rate: 4.7, count: 230 }
-  },
-  {
-    title: "Designer Bikini Set",
-    price: 89.99,
-    description: "Two-Piece Floral Print Bikini Set",
-    category: "women's clothing",
-    image: "https://images.unsplash.com/photo-1582558929569-37c461a5cd00?auto=format&fit=crop&q=80&w=600",
-    rating: { rate: 4.8, count: 175 }
   },
   {
     title: "Running Shoes",
@@ -80,7 +72,7 @@ const additionalProducts: Partial<Product>[] = [
     price: 1299.99,
     description: "15.6-inch gaming laptop with RTX 3070, 32GB RAM, and 1TB SSD",
     category: "electronics",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=600",
     rating: { rate: 4.7, count: 189 }
   },
   {
@@ -88,7 +80,7 @@ const additionalProducts: Partial<Product>[] = [
     price: 129.99,
     description: "Mechanical keyboard with RGB backlight and programmable keys",
     category: "electronics",
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&q=80&w=600",
     rating: { rate: 4.5, count: 156 }
   },
   {
@@ -104,7 +96,7 @@ const additionalProducts: Partial<Product>[] = [
     price: 299.99,
     description: "Elegant floor-length evening gown with beaded details",
     category: "women's clothing",
-    image: "https://images.unsplash.com/photo-1619086303291-0ef7699e4b31?auto=format&fit=crop&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1646647238247-03a032b30c87?auto=format&fit=crop&q=80&w=600",
     rating: { rate: 4.8, count: 167 }
   },
   {
